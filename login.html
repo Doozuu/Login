@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        <h1>로그인</h1>
+        <div> email : <input type="email" id="signInEmail"/></div>
+        <div> password : <input type="password" id="signInPw"></div>
+        <button type="submit" id="signInBtn">로그인 하기</button>
+        <button type="button" onClick="location.href='signup.html'">회원가입 하러 가기</button>
+        <button type="button" onClick="location.href='findpw.html'">비밀번호 찾기</button>
+    </form>
+
+    <script type="module">
+         // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+        apiKey: "AIzaSyDWU1jwbMlkcq0apVF3N9h2YzBljPTWwIE",
+        authDomain: "login-a5b60.firebaseapp.com",
+        projectId: "login-a5b60",
+        storageBucket: "login-a5b60.appspot.com",
+        messagingSenderId: "681010242332",
+        appId: "1:681010242332:web:600c6117d7a438d330d0d9",
+        measurementId: "G-NJC2MN9GXR"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        import { getAuth, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
+
+        const auth = getAuth(); // 공통 부분
+
+        document.getElementById('signInBtn').addEventListener('click', (event)=> {
+            event.preventDefault();
+            const signInEmail = document.getElementById('signInEmail').value
+            const signInPw =  document.getElementById('signInPw').value
+            signInWithEmailAndPassword(auth, signInEmail, signInPw)
+            .then((userCredential) => {
+                alert('성공적으로 로그인 되었습니다.')
+                location.href="index.html";
+                const user = userCredential.user;
+            })
+            .catch((error) => {
+                alert('로그인 실패')
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
+        })
+    </script>
+</body>
+</html>

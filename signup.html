@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        <h1>회원가입</h1>
+        <div> ID : <input type="text" id="id"> 4자 이상 입력해주세요.</div>
+        <div> email : <input type="email" id="signUpEmail"/></div>
+        <div> password : <input type="password" id="signUpPw"> 7~12자 영문 대소문자, 숫자, 특수문자 포함</div>
+        <div> Repeat password : <input type="password" id="repeatPw"></div>
+        <button type="submit" id="signUpBtn">회원가입 하기</button>
+        <button type="button" onClick="location.href='login.html'">로그인 하러 가기</button>
+   </form>
+
+   <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyDWU1jwbMlkcq0apVF3N9h2YzBljPTWwIE",
+      authDomain: "login-a5b60.firebaseapp.com",
+      projectId: "login-a5b60",
+      storageBucket: "login-a5b60.appspot.com",
+      messagingSenderId: "681010242332",
+      appId: "1:681010242332:web:600c6117d7a438d330d0d9",
+      measurementId: "G-NJC2MN9GXR"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    import { getAuth, createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
+
+    const auth = getAuth(); // 공통 부분
+
+    // 회원가입
+    document.getElementById('signUpBtn').addEventListener('click', (event) => {
+        event.preventDefault(); // 새로고침 막음
+        const id = document.getElementById('id').value
+        const signUpEmail = document.getElementById('signUpEmail').value
+        const signUpPw = document.getElementById('signUpPw').value
+        const repeatPw = document.getElementById('repeatPw').value
+        var num = signUpPw.search(/[0-9]/g);
+        var eng = signUpPw.search(/[a-z]/ig);
+        var spe = signUpPw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+        createUserWithEmailAndPassword(auth, signUpEmail, signUpPw)
+        .then((userCredential) => {
+            console.log('환영합니다!')
+            console.log(userCredential);
+            const user = userCredential.user;
+        })
+        .catch((error) => {
+            if(id || signUpEmail || signUpPw || repeatPw === ""){
+                alert('빈칸을 작성해주세요')
+            }else if(id.length < 4){
+                alert('아이디가 너무 짧습니다.')
+            }else if(signUpPw.length < 7){
+                alert('비밀번호가 너무 짧습니다.')
+            }else if(signUpPw.length > 12){
+                alert('비밀번호가 너무 깁니다.')
+            }else if(num < 0 || eng < 0 || spe < 0 ){
+                alert("영문,숫자, 특수문자를 혼합하여 입력해주세요.");
+            }else if(signUpPw !== repeatPw){
+                alert('비밀번호가 일치하지 않습니다.')
+            }else{
+                alert('error')
+            }
+            const errorCode = error.code;
+            const errorMessage = error.message;
+        });
+    })
+</script>
+</body>
+</html>
